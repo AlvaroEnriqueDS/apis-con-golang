@@ -9,5 +9,6 @@ func main()  {
         e := echo.New()
 
         e.POST("/register", controllers.CreateUser)
+        e.POST("/login", controllers.LoginUser)
         e.Start(":80")
 }

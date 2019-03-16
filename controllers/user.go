@@ -52,7 +52,7 @@ func CreateUser( c echo.Context) error  {
         return c.NoContent(http.StatusCreated)
 }
 
-/*
+//LoginUser es para que se logueen lo usuarios
 func LoginUser(c echo.Context) error {
         user := models.User{}
 
@@ -66,18 +66,30 @@ func LoginUser(c echo.Context) error {
         //se codifica la contraseña a sha256
         pass := sha256.Sum256([]byte(user.Password))
         pwd := fmt.Sprintf("%x", pass)
+        user.Password = pwd
 
         //se abre una conexion con al BD
         db := configuration.GetConnectionPsql()
         defer db.Close()
 
         //se verifica si el usuario existe
-        q := ""
+        q := "SELECT c.id, c.username, c.fullname, c.picture FROM users c WHERE c.email=$1 AND c.password=$2;"
 
-        stmt, err :=
+        stmt, err := db.Prepare(q)
+        if err != nil {
+                fmt.Printf("Error al crear el registro: %s", err)
+                return c.NoContent(http.StatusBadRequest)
+        }
 
-        c.Response().Write()
-
+        row := stmt.QueryRow(user.Email, user.Password)
+        user.Password = ""
+        err = row.Scan(&user.Id, &user.Username, &user.Fullname, &user.Picture)
+        if err != nil {
+                fmt.Printf("Error al scanear el registro: %s", err)
+                return c.NoContent(http.StatusBadRequest)
+        }
+        
+        return c.JSON(http.StatusOK, user)
 
 }
-*/
+
