@@ -39,7 +39,7 @@ func CreateUser( c echo.Context) error  {
         defer db.Close()
 
         //se inserta el usuario
-        q := "insert into users (username, email, fullname, password, picture) values ($1, $2, $3, $4, $5);"
+        q := "insert into users (username, email, fullname, password, picture) values ($1, $2, $3, $4, $5) RETURNING id;"
 
         stmt, err := db.Prepare(q)
         if err != nil {
@@ -47,9 +47,16 @@ func CreateUser( c echo.Context) error  {
                 return c.NoContent(http.StatusBadRequest)
         }
 
-        stmt.QueryRow(user.Username, user.Email, user.Fullname, user.Password, user.Picture)
+        row := stmt.QueryRow(user.Username, user.Email, user.Fullname, user.Password, user.Picture)
+        err = row.Scan(&user.Id)
+        if err != nil {
+                fmt.Printf("Error al scanear el registro: %s", err)
+                return c.NoContent(http.StatusBadRequest)
+        }
+        user.Password = ""
+        user.ConfirmPassword = ""
 
-        return c.NoContent(http.StatusCreated)
+        return c.JSON(http.StatusOK, user)
 }
 
 //LoginUser es para que se logueen lo usuarios
@@ -88,7 +95,7 @@ func LoginUser(c echo.Context) error {
                 fmt.Printf("Error al scanear el registro: %s", err)
                 return c.NoContent(http.StatusBadRequest)
         }
-        
+
         return c.JSON(http.StatusOK, user)
 
 }
