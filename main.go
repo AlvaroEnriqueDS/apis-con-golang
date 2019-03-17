@@ -11,5 +11,6 @@ func main()  {
         e.POST("/register", controllers.CreateUser)
         e.POST("/login", controllers.LoginUser)
         e.POST("/comment", controllers.CommentCreate)
+        e.GET("/comment", controllers.CommentGetAll)
         e.Start(":80")
 }

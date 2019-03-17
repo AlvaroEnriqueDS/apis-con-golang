@@ -11,7 +11,7 @@ import (
 )
 
 //CreateUser funcion para crear un usuario
-func CreateUser( c echo.Context) error  {
+func CreateUser(c echo.Context) error  {
         user := models.User{}
 
         //se lee el json entrante y vuelca en el modelo user
