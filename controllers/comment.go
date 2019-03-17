@@ -94,7 +94,7 @@ func CommentGetAll(c echo.Context) error  {
                         Content: row.Content,
                 }
                 */
-
+                row.User = commentGetUser(row.UserID)
                 row.Children = commentGetChildren(row.Id)
                 comments = append(comments, row)
         }
@@ -152,6 +152,7 @@ func commentGetChildren(id uint) (children []models.Comment)  {
                 fmt.Println("")
                 return
         }
+        chil.User = commentGetUser(chil.UserID)
 
         children = append(children, chil)
 
@@ -162,23 +163,34 @@ func commentGetUser(id uint) (user []models.User) {
         db := configuration.GetConnectionPsql()
         defer db.Close()
 
-        row := models.User{}
+        u := models.User{}
 
         //se verifica si el usuario existe
-        q := "SELECT c.id, c.username, c.fullname, c.picture FROM users c WHERE c.email=$1 AND c.password=$2;"
+        q := "SELECT c.id, c.username, c.email, c.fullname, c.picture FROM users c WHERE id = $1;"
 
         stmt, err := db.Prepare(q)
         if err != nil {
-                fmt.Printf("Error al crear el registro: %s", err)
+                fmt.Printf("Error al Preparar el query: %s", err)
+                fmt.Println("")
                 return
         }
 
-        row := stmt.QueryRow(user.Email, user.Password)
-        user.Password = ""
-        err = row.Scan(&user.Id, &user.Username, &user.Fullname, &user.Picture)
+        row := stmt.QueryRow(id)
+        err = row.Scan(
+                &u.Id,
+                &u.Username,
+                &u.Email,
+                &u.Fullname,
+                &u.Picture,
+        )
         if err != nil {
-                fmt.Printf("Error al scanear el registro: %s", err)
-                return c.NoContent(http.StatusBadRequest)
+                fmt.Printf("Error al scanear: %s", err)
+                fmt.Println("")
+                return
         }
+
+        user = append(user, u)
+
+        return user
 }
 
