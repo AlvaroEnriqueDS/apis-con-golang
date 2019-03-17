@@ -88,6 +88,7 @@ func LoginUser(c echo.Context) error {
                 return c.NoContent(http.StatusBadRequest)
         }
 
+
         row := stmt.QueryRow(user.Email, user.Password)
         user.Password = ""
         err = row.Scan(&user.Id, &user.Username, &user.Fullname, &user.Picture)
