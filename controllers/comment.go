@@ -154,17 +154,25 @@ func commentGetChildren(id uint) (children []models.Comment)  {
                         fmt.Println("3")
                         return
                 }
-                /*
-                ctm := models.Comment{
-                        Id: row.Id,
-                        UserID: row.UserID,
-                        ParentId: row.ParentId,
-                        Votes: row.Votes,
-                        Content: row.Content,
-                }
-                */
                 children = append(children, row)
         }
 
         return children
 }
+/*
+func commentGetUser(id uint) (user []models.User) {
+        db := configuration.GetConnectionPsql()
+        defer db.Close()
+
+        row := models.User{}
+
+        //se verifica si el usuario existe
+        q := "SELECT c.id, c.username, c.fullname, c.picture FROM users c WHERE c.email=$1 AND c.password=$2;"
+
+        stmt, err := db.Prepare(q)
+        if err != nil {
+                fmt.Printf("Error al crear el registro: %s", err)
+                return
+        }
+}
+*/
