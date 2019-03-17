@@ -94,6 +94,7 @@ func CommentGetAll(c echo.Context) error  {
                         Content: row.Content,
                 }
                 */
+
                 row.Children = commentGetChildren(row.Id)
                 comments = append(comments, row)
         }
@@ -126,40 +127,37 @@ func commentGetChildren(id uint) (children []models.Comment)  {
         db := configuration.GetConnectionPsql()
         defer db.Close()
 
-        row := models.Comment{}
+        chil := models.Comment{}
 
         //esto solo nos traera los comentarios padres
         q := "select id, user_id, parent_id, votes, content from comments where parent_id = $1;"
 
         stmt, err := db.Prepare(q)
         if err != nil {
-                fmt.Printf("Error al crear el registro: %s", err)
+                fmt.Printf("Error al preparar el query: %s", err)
+                fmt.Println("")
                 return
         }
-        rows, err := stmt.Query(id)
+        row := stmt.QueryRow(id)
+
+        err = row.Scan(
+                &chil.Id,
+                &chil.UserID,
+                &chil.ParentId,
+                &chil.Votes,
+                &chil.Content,
+        )
         if err != nil {
-                fmt.Printf("Error ejecutar el registro: %s", err)
+                fmt.Printf("Error al escanear: %s", err)
+                fmt.Println("")
                 return
         }
 
-        for rows.Next() {
-                err := rows.Scan(
-                        &row.Id,
-                        &row.UserID,
-                        &row.ParentId,
-                        &row.Votes,
-                        &row.Content,
-                )
-                if err != nil {
-                        fmt.Println("3")
-                        return
-                }
-                children = append(children, row)
-        }
+        children = append(children, chil)
 
         return children
 }
-/*
+
 func commentGetUser(id uint) (user []models.User) {
         db := configuration.GetConnectionPsql()
         defer db.Close()
@@ -174,5 +172,13 @@ func commentGetUser(id uint) (user []models.User) {
                 fmt.Printf("Error al crear el registro: %s", err)
                 return
         }
+
+        row := stmt.QueryRow(user.Email, user.Password)
+        user.Password = ""
+        err = row.Scan(&user.Id, &user.Username, &user.Fullname, &user.Picture)
+        if err != nil {
+                fmt.Printf("Error al scanear el registro: %s", err)
+                return c.NoContent(http.StatusBadRequest)
+        }
 }
-*/
+
