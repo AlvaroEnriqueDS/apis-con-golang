@@ -94,8 +94,77 @@ func CommentGetAll(c echo.Context) error  {
                         Content: row.Content,
                 }
                 */
+                row.Children = commentGetChildren(row.Id)
                 comments = append(comments, row)
         }
+        /*
+        for i := range comments {
+                db.Model(&comments[i]).Related(&comments[i].User)
+                comments[i].User[0].Password = ""
+                comments[i].Children = commentGetChildren(comments[i].ID)
+
+                // Se busca el voto del usuario en sesión
+                vote.CommentID = comments[i].ID
+                vote.UserID = user.ID
+                count := db.Where(&vote).Find(&vote).RowsAffected
+                if count > 0 {
+                        if vote.Value {
+                                comments[i].HasVote = 1
+                        } else {
+                                comments[i].HasVote = -1
+                        }
+                }
+        }
+
+        */
 
         return c.JSON(http.StatusOK, comments)
+}
+
+//
+func commentGetChildren(id uint) (children []models.Comment)  {
+        db := configuration.GetConnectionPsql()
+        defer db.Close()
+
+        row := models.Comment{}
+
+        //esto solo nos traera los comentarios padres
+        q := "select id, user_id, parent_id, votes, content from comments where parent_id = $1;"
+
+        stmt, err := db.Prepare(q)
+        if err != nil {
+                fmt.Printf("Error al crear el registro: %s", err)
+                return
+        }
+        rows, err := stmt.Query(id)
+        if err != nil {
+                fmt.Printf("Error ejecutar el registro: %s", err)
+                return
+        }
+
+        for rows.Next() {
+                err := rows.Scan(
+                        &row.Id,
+                        &row.UserID,
+                        &row.ParentId,
+                        &row.Votes,
+                        &row.Content,
+                )
+                if err != nil {
+                        fmt.Println("3")
+                        return
+                }
+                /*
+                ctm := models.Comment{
+                        Id: row.Id,
+                        UserID: row.UserID,
+                        ParentId: row.ParentId,
+                        Votes: row.Votes,
+                        Content: row.Content,
+                }
+                */
+                children = append(children, row)
+        }
+
+        return children
 }
