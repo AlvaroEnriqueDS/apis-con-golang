@@ -4,6 +4,7 @@ import (
         "crypto/sha256"
         "encoding/json"
         "fmt"
+        "github.com/alvaroenriqueds/dinamoPruebas/commons"
         "github.com/alvaroenriqueds/dinamoPruebas/configuration"
         "github.com/alvaroenriqueds/dinamoPruebas/models"
         "github.com/labstack/echo"
@@ -90,14 +91,32 @@ func LoginUser(c echo.Context) error {
 
 
         row := stmt.QueryRow(user.Email, user.Password)
+        if row == nil {
+                fmt.Printf("Usuario o clave no valido: %s", err)
+                return c.NoContent(http.StatusBadRequest)
+        }
         user.Password = ""
+
         err = row.Scan(&user.Id, &user.Username, &user.Fullname, &user.Picture)
         if err != nil {
                 fmt.Printf("Error al scanear el registro: %s", err)
                 return c.NoContent(http.StatusBadRequest)
         }
 
-        return c.JSON(http.StatusOK, user)
+        //generamos el token
+        token := commons.GenerateJWT(user)
+        result := models.ResponseToken{Token: token}
 
+        /*
+        jsonr, err := json.Marshal(result)
+        if err != nil {
+                log.Fatalf("Error al convertir el token a json: %s", err)
+        }
+        c.Response().WriteHeader(http.StatusOK)
+        c.Response().Header().Set("Content-Type", "application/json")
+        c.Response().Write(jsonr)
+        */
+
+        return c.JSON(http.StatusOK, result)
 }
 
