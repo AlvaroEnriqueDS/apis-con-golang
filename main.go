@@ -22,5 +22,6 @@ func main()  {
         e.POST("/comment", controllers.CommentCreate)
         e.GET("/comment", controllers.CommentGetAll)
         e.POST("/upload", controllers.Upload)
+        e.GET("/validate", controllers.ValidateToken)
         e.Start(":80")
 }

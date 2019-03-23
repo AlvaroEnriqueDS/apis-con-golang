@@ -45,11 +45,6 @@ func ValidateToken(c echo.Context) error  {
                 return c.String(http.StatusUnauthorized, "Su token no es validp")
         }
 
-        /*
-        user := c.Get("user").(*jwt.Token)
-        claims := user.Claims.(*models.Claim)
-        name := claims.User.Fullname
 
-        return c.String(http.StatusOK, "Bienvenido "+name)
-        */
+
 }
