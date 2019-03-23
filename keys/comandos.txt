@@ -1,0 +1,3 @@
+openssl genrsa github.com/alvaroenriqueds/comments_chat/keys/private.rsa 1024
+
+openssl rsa -in github.com/alvaroenriqueds/comments_chat/keys/private.rsa -pubout > github.com/alvaroenriqueds/comments_chat/keys/public.rsa

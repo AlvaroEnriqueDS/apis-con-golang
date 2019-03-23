@@ -8,7 +8,7 @@
 
 #carpetas
 .idea
-/keys
+/keys/*.rsa
 
 # Test binary, build with `go test -c`
 *.test
