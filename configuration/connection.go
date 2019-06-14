@@ -21,7 +21,7 @@ type configuration struct {
 
 func getConfiguration() (configuration, error) {
 	config := configuration{}
-	file, err := os.Open("./config.json")
+	file, err := os.Open("./config.example.json")
 	if err != nil {
 		return config, err
 	}
@@ -43,7 +43,7 @@ func GetConnectionPsql() *sql.DB {
 	}
 
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%v/%s?sslmode=disable", config.DBUser, config.DBPassword, config.DBServer, config.DBPort, config.DBName)
-
+        fmt.Println(dsn)
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal(err)

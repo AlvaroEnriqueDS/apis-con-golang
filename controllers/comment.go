@@ -6,6 +6,8 @@ import (
         "github.com/alvaroenriqueds/apis-con-golang/configuration"
         "github.com/alvaroenriqueds/apis-con-golang/models"
         "github.com/labstack/echo"
+        "golang.org/x/net/websocket"
+        "log"
         "net/http"
 )
 
@@ -39,6 +41,21 @@ func CommentCreate(c echo.Context) error  {
         //        fmt.Printf("Error al scanear el registro: %s", err)
         //        return c.NoContent(http.StatusBadRequest)
         //}
+
+
+        port := 2020
+        origin := fmt.Sprintf("http://localhost:%d/", port)
+        url := fmt.Sprintf("ws://localhost:%d/ws", port)
+        ws, err := websocket.Dial(url, "", origin)
+        if err != nil {
+                log.Fatal(err)
+        }
+
+        j, err := json.Marshal(&comment)
+        if _, err := ws.Write(j); err != nil {
+                log.Fatal(err)
+        }
+
 
         return c.NoContent(http.StatusCreated)
 }
