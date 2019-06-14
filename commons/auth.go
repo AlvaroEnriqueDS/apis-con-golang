@@ -2,7 +2,7 @@ package commons
 
 import (
         "crypto/rsa"
-        "github.com/alvaroenriqueds/dinamoPruebas/models"
+        "github.com/alvaroenriqueds/apis-con-golang/models"
         "github.com/dgrijalva/jwt-go"
         "io/ioutil"
         "log"

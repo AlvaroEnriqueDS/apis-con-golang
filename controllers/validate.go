@@ -2,8 +2,8 @@ package controllers
 
 import (
         "fmt"
-        "github.com/alvaroenriqueds/dinamoPruebas/commons"
-        "github.com/alvaroenriqueds/dinamoPruebas/models"
+        "github.com/alvaroenriqueds/apis-con-golang/commons"
+        "github.com/alvaroenriqueds/apis-con-golang/models"
         "github.com/dgrijalva/jwt-go"
         "github.com/dgrijalva/jwt-go/request"
         "github.com/labstack/echo"

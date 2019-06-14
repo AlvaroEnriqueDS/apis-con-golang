@@ -1,7 +1,7 @@
 package main
 
 import (
-        "github.com/alvaroenriqueds/dinamoPruebas/controllers"
+        "github.com/alvaroenriqueds/apis-con-golang/controllers"
         "github.com/labstack/echo"
 )
 

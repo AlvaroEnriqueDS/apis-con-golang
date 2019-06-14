@@ -3,8 +3,8 @@ package controllers
 import (
         "encoding/json"
         "fmt"
-        "github.com/alvaroenriqueds/dinamoPruebas/configuration"
-        "github.com/alvaroenriqueds/dinamoPruebas/models"
+        "github.com/alvaroenriqueds/apis-con-golang/configuration"
+        "github.com/alvaroenriqueds/apis-con-golang/models"
         "github.com/labstack/echo"
         "net/http"
 )
