@@ -16,7 +16,7 @@ func main()  {
                 AllowOrigins:     []string{"*"},
                 AllowMethods:     []string{echo.GET, echo.POST, echo.DELETE, echo.PUT},
         }))
-        mel = melody.New()
+        //mel = melody.New()
         /*
         server, err := socketio.NewServer(nil)
         if err != nil {
@@ -32,7 +32,7 @@ func main()  {
         e.GET("/comment", controllers.CommentGetAll)
         e.POST("/upload", controllers.Upload)
         e.GET("/validate", controllers.ValidateToken)
-        e.GET("/ws", webSockets)
+        socketRoute(e)
         /*
         e.GET("/ws", func(c echo.Context) error {
                 m.HandleRequest(c.Response().Writer, c.Request())
@@ -44,6 +44,11 @@ func main()  {
         */
         e.Start(":2020")
 
+}
+
+func socketRoute(e *echo.Echo) {
+        mel = melody.New()
+        e.GET("/ws", webSockets)
 }
 
 var mel *melody.Melody
