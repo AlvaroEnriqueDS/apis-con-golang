@@ -6,17 +6,31 @@
 </head>
 <body>
 <h1>Realtime</h1>
+<h2>COMENTARIOS</h2>
 <div class="container-data" id="containerData"></div>
-<form action="/upload" method="post" enctype="multipart/form-data">
+<h2>IMAGENES</h2>
+<form action="/upload" method="post" enctype="multipart/form-data" >
     <input type="file" id="myFile" name="myFile">
     <button id="btnSend">Enviar</button>
 </form>
+<div class="container-img" id="containerImg"></div>
+
+
 <script type="text/javascript">
     var url = "ws://" + window.location.host + "/ws";
     var ws = new WebSocket(url);
     var containerData = document.getElementById("containerData");
     ws.onmessage = function (msg) {
         containerData.innerHTML += "<pre>" + msg.data + "</pre>\n"
+    }
+</script>
+
+<script type="text/javascript">
+    var urli = "ws://" + window.location.host + "/wsi";
+    var wsi = new WebSocket(urli);
+    var containerImg = document.getElementById("containerImg");
+    wsi.onmessage = function (msgi) {
+        containerImg.innerHTML += "<img src=" + msgi.data + ">\n"
     }
 </script>
 

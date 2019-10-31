@@ -4,7 +4,6 @@ import (
         "github.com/alvaroenriqueds/apis-con-golang/controllers"
         "github.com/labstack/echo"
         "github.com/labstack/echo/middleware"
-        "github.com/olahol/melody"
         //"gopkg.in/olahol/melody.v1"
 )
 
@@ -47,22 +46,7 @@ func main()  {
 }
 
 func socketRoute(e *echo.Echo) {
-        mel = melody.New()
-        e.GET("/ws", webSockets)
-}
-
-var mel *melody.Melody
-
-
-func webSockets(c echo.Context) error  {
-        mel.HandleRequest(c.Response().Writer, c.Request())
-        //mel.HandleConnect(hConnect)
-        //mel.HandleDisconnect(hDisconnect)
-        mel.HandleMessage(hMessage)
-        return nil
-}
-func hMessage(s *melody.Session, msg []byte) {
-        mel.Broadcast(msg)
+        e.GET("/ws", controllers.WebSockets)
 }
 
 
