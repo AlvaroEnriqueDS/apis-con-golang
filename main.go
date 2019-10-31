@@ -4,7 +4,6 @@ import (
         "github.com/alvaroenriqueds/apis-con-golang/controllers"
         "github.com/labstack/echo"
         "github.com/labstack/echo/middleware"
-        "github.com/olahol/melody"
         //"gopkg.in/olahol/melody.v1"
 )
 
@@ -16,7 +15,7 @@ func main()  {
                 AllowOrigins:     []string{"*"},
                 AllowMethods:     []string{echo.GET, echo.POST, echo.DELETE, echo.PUT},
         }))
-        mel = melody.New()
+        //mel = melody.New()
         /*
         server, err := socketio.NewServer(nil)
         if err != nil {
@@ -32,7 +31,7 @@ func main()  {
         e.GET("/comment", controllers.CommentGetAll)
         e.POST("/upload", controllers.Upload)
         e.GET("/validate", controllers.ValidateToken)
-        e.GET("/ws", webSockets)
+        socketRoute(e)
         /*
         e.GET("/ws", func(c echo.Context) error {
                 m.HandleRequest(c.Response().Writer, c.Request())
@@ -46,18 +45,10 @@ func main()  {
 
 }
 
-var mel *melody.Melody
+func socketRoute(e *echo.Echo) {
+        e.GET("/ws", controllers.WebSockets)
+        e.GET("/wsi", controllers.WebSockets)
 
-
-func webSockets(c echo.Context) error  {
-        mel.HandleRequest(c.Response().Writer, c.Request())
-        //mel.HandleConnect(hConnect)
-        //mel.HandleDisconnect(hDisconnect)
-        mel.HandleMessage(hMessage)
-        return nil
-}
-func hMessage(s *melody.Session, msg []byte) {
-        mel.Broadcast(msg)
 }
 
 
