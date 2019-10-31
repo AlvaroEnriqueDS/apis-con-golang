@@ -47,6 +47,8 @@ func main()  {
 
 func socketRoute(e *echo.Echo) {
         e.GET("/ws", controllers.WebSockets)
+        e.GET("/wsi", controllers.WebSockets)
+
 }
 
 
